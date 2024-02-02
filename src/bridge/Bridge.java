@@ -1,11 +1,17 @@
 package bridge;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
+
 import java.util.ArrayList;
 
 /**
  * the bridge between the AI player and human moderator.
  */
-public class Bridge {
+public class Bridge extends Application {
+    public static void main(String[] args) {
+        launch(args);
+    }
     // this should only be used to store the most recent response.
     private String response;
     // this will store all the responses
@@ -61,5 +67,10 @@ public class Bridge {
 
     public void setResponse(String response) {
         this.response = response;
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+
     }
 }
