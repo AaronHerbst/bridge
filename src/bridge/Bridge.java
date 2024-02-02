@@ -3,7 +3,7 @@ package bridge;
 import java.util.ArrayList;
 
 /**
- * the bridge between the AI player and human moderator
+ * the bridge between the AI player and human moderator.
  */
 public class Bridge {
     // this should only be used to store the most recent response.
