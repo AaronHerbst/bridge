@@ -11,7 +11,7 @@ public class Bridge {
     // this will store all the responses
     private StringBuilder log = new StringBuilder();
     /**
-     * prompt generation logic
+     * prompt generation logic.
      * @param role the player's role, or VOTING if the player needs to vote
      * @param options all valid options
      * @return the prompt
