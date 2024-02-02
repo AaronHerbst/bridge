@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 /**
- * the bridge between the AI player and human moderator.
+ * the bridge between the AI player, and human moderator and the game itself.
  */
 public class Bridge extends Application {
     public static void main(String[] args) {
