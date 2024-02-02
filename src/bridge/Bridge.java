@@ -3,19 +3,53 @@ package bridge;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import javax.net.ssl.*;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Base64;
 
 /**
  * the bridge between the AI player, and human moderator and the game itself.
  */
 public class Bridge extends Application {
-    public static void main(String[] args) {
-        launch(args);
-    }
     // this should only be used to store the most recent response.
     private String response;
     // this will store all the responses
     private StringBuilder log = new StringBuilder();
+    public static void main(String[] args) {
+        // Disable SSL certificate check
+        try {
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, TrustAllManager.getTrustManagers(), new java.security.SecureRandom());
+            String encoding = Base64.getEncoder().encodeToString(("yoder" + ":" + System.getenv("ROSIE_PASSWORD")).getBytes());
+
+            // Create a custom HttpClient with the disabled certificate check
+            HttpClient client = HttpClient.newBuilder()
+                    .sslContext(sslContext)
+                    .build();
+
+            // Make the HTTP request
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://dh-ood.hpc.msoe.edu/node/dh-node4.hpc.msoe.edu/5000/greet?username=Blah"))
+                    .setHeader("Authorization", "Basic " + encoding).build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println(response.statusCode());
+            System.out.println(response.body());
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        //   launch(args);
+    }
+
+
+
+
+
     /**
      * prompt generation logic.
      * @param role the player's role, or VOTING if the player needs to vote
