@@ -30,7 +30,7 @@ public class Bridge extends Application {
     private static String encoding;
     private static String url;
     private static HttpClient client;
-    private static FXMLLoader loader;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -63,7 +63,11 @@ public class Bridge extends Application {
 
             System.out.println(response.statusCode());
             System.out.println(response.body());
-            loader.setLocation(Bridge.class.getResource("boot.fxml"));
+
+
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Bridge.class.getResource("bridge.fxml"));
             try {
                 Parent root = loader.load();
                 stage.setScene(new Scene(root));
@@ -138,7 +142,7 @@ public class Bridge extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        loader = new FXMLLoader();
+        FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("boot.fxml"));
         try {
             Parent root = loader.load();
