@@ -1,9 +1,17 @@
+/*
+ * Course: stop yelling at me checkstyle
+ */
 package bridge;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import javax.net.ssl.*;
+
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -16,36 +24,61 @@ import java.util.Base64;
  */
 public class Bridge extends Application {
     // this should only be used to store the most recent response.
-    private String response;
+    private static String response;
     // this will store all the responses
-    private StringBuilder log = new StringBuilder();
+    private static StringBuilder log = new StringBuilder();
+    private static String encoding;
+    private static String url;
+    private static HttpClient client;
+    private static FXMLLoader loader;
     public static void main(String[] args) {
-        // Disable SSL certificate check
+        launch(args);
+    }
+
+    /**
+     * sets up the HTTP client
+     * @param username the username
+     * @param password the password
+     * @param uri the URL
+     */
+    public static Boolean boot(String username, String password, String uri,Stage stage){
+        url = uri;
         try {
+            // Disable SSL certificate check
             SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, TrustAllManager.getTrustManagers(), new java.security.SecureRandom());
-            String encoding = Base64.getEncoder().encodeToString(("yoder" + ":" + System.getenv("ROSIE_PASSWORD")).getBytes());
+            sslContext.init(null, TrustAllManager.getTrustManagers(),
+                    new java.security.SecureRandom());
+            encoding = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 
             // Create a custom HttpClient with the disabled certificate check
-            HttpClient client = HttpClient.newBuilder()
+            client = HttpClient.newBuilder()
                     .sslContext(sslContext)
                     .build();
 
             // Make the HTTP request
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://dh-ood.hpc.msoe.edu/node/dh-node4.hpc.msoe.edu/5000/greet?username=Blah"))
+                    .uri(URI.create(url))
                     .setHeader("Authorization", "Basic " + encoding).build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             System.out.println(response.statusCode());
             System.out.println(response.body());
+            loader.setLocation(Bridge.class.getResource("boot.fxml"));
+            try {
+                Parent root = loader.load();
+                stage.setScene(new Scene(root));
 
+                stage.show();
+
+            } catch (IOException e){
+                System.err.println(" I am broken");
+            }
+            return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return false;
         }
-        //   launch(args);
     }
-
 
 
 
@@ -105,6 +138,14 @@ public class Bridge extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
+        loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("boot.fxml"));
+        try {
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e){
+            System.err.println(" I am broken");
+        }
     }
 }

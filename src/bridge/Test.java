@@ -1,9 +1,5 @@
 /*
- * Course: CS 1011
- *Fall 2023
- * Roby Velez
- * Cameron Konicek
- * 2/2/2024
+ * Course: Course: stop yelling at me checkstyle
  */
 package bridge;
 import java.net.URI;
@@ -44,6 +40,9 @@ public class Test {
         }
     }
 
+/**
+ * im sure this is important
+ */
     class TrustAllManager {
         public static javax.net.ssl.TrustManager[] getTrustManagers() {
             return new javax.net.ssl.TrustManager[]{
