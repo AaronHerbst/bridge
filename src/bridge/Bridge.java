@@ -51,11 +51,13 @@ public class Bridge extends Application {
             encoding = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 
             // Create a custom HttpClient with the disabled certificate check
+            // only runs once
             client = HttpClient.newBuilder()
                     .sslContext(sslContext)
                     .build();
 
             // Make the HTTP request
+            // will need to run each time you need to send something to the AI
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .setHeader("Authorization", "Basic " + encoding).build();
