@@ -107,7 +107,26 @@ public class Bridge extends Application {
      * @return the first keyword that appears in the response,
      * or null if no keywords are in the response.
      */
-    public String parseResponse(String response, ArrayList<String> keywords){
+    public static String parseResponse(String response, ArrayList<String> keywords){
+
+        int currentEarliest = response.length()+1;
+        int wordIndex = -1;
+
+        for(int i = 0; i < keywords.size(); i++) {
+
+            int firstOccurrence = response.indexOf(keywords.get(i));
+            if(firstOccurrence < currentEarliest && firstOccurrence > -1) {
+
+                currentEarliest = firstOccurrence;
+                System.out.println(i);
+                wordIndex = i;
+            }
+
+        }
+
+        if (wordIndex != -1) {
+            return keywords.get(wordIndex);
+        }
         return null;
     }
     /**
