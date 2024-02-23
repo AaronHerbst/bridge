@@ -20,8 +20,10 @@ import java.net.http.HttpResponse;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Timer;
 
 /**
  * the bridge between the AI player, and human moderator and the game itself.
@@ -75,8 +77,8 @@ public class Bridge extends Application {
         HttpResponse<String> response = client.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-
-        if(!response.body().contains("BLah")){
+        System.out.println(response.body());
+        if(!response.body().contains("Blah")){
             throw new IOException("failed to connect to server \n"+response.body());
         }
         request(null, role);
@@ -153,11 +155,12 @@ public class Bridge extends Application {
                 .uri(URI.create(url+prompt))
                 .setHeader("Authorization", "Basic " + encoding).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        log(response.body());
+        String savedResponse = response.body();
+        log(savedResponse);
         if (options == null) {
             return null;
         }
-        return parseResponse(response.body(), options);
+        return parseResponse(savedResponse, options);
     }
 
     /**
