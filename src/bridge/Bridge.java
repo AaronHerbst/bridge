@@ -77,7 +77,7 @@ public class Bridge extends Application {
 
 
         if(!response.body().contains("BLah")){
-            throw new IOException("failed to connect to server");
+            throw new IOException("failed to connect to server \n"+response.body());
         }
         request(null, role);
 
@@ -148,6 +148,7 @@ public class Bridge extends Application {
     public static String request(ArrayList<String> options,
                                  String actionType) throws InterruptedException, IOException{
         String prompt = generatePrompt(actionType, options);
+        log(prompt);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url+prompt))
                 .setHeader("Authorization", "Basic " + encoding).build();
