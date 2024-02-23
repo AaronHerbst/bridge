@@ -12,10 +12,14 @@ import javafx.stage.Stage;
 import javax.net.ssl.*;
 
 import java.io.IOException;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
 
@@ -23,10 +27,8 @@ import java.util.Base64;
  * the bridge between the AI player, and human moderator and the game itself.
  */
 public class Bridge extends Application {
-    // this should only be used to store the most recent response.
-    private static String response;
-    // this will store all the responses
-    private static StringBuilder log = new StringBuilder();
+    private static String role;
+    private static final StringBuilder LOG = new StringBuilder();
     private static String encoding;
     private static String url;
     private static HttpClient client;
@@ -40,63 +42,67 @@ public class Bridge extends Application {
      * @param username the username
      * @param password the password
      * @param uri the URL
+     * @param roll the role
+     * @param stage the stage
+     * @throws NoSuchAlgorithmException checked exception
+     * @throws KeyManagementException checked exception
+     * @throws InterruptedException checked exception
+     * @throws IOException checked exception
      */
-    public static Boolean boot(String username, String password, String uri,Stage stage){
+    public static void boot(String username, String password, String uri, Stage stage, String roll)
+            throws NoSuchAlgorithmException, KeyManagementException, IOException,
+            InterruptedException {
         url = uri;
-        try {
-            // Disable SSL certificate check
-            SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, TrustAllManager.getTrustManagers(),
-                    new java.security.SecureRandom());
-            encoding = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+        role = roll;
 
-            // Create a custom HttpClient with the disabled certificate check
-            // only runs once
-            client = HttpClient.newBuilder()
-                    .sslContext(sslContext)
-                    .build();
+        // Disable SSL certificate check
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(null, TrustAllManager.getTrustManagers(),
+                new java.security.SecureRandom());
+        encoding = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 
-            // Make the HTTP request
-            // will need to run each time you need to send something to the AI
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .setHeader("Authorization", "Basic " + encoding).build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        // Create a custom HttpClient with the disabled certificate check
+        // only runs once
+        client = HttpClient.newBuilder()
+                .sslContext(sslContext)
+                .build();
 
-            System.out.println(response.statusCode());
-            System.out.println(response.body());
-
+        // Make the HTTP request
+        // will need to run each time you need to send something to the AI
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .setHeader("Authorization", "Basic " + encoding).build();
+        HttpResponse<String> response = client.send(request,
+                HttpResponse.BodyHandlers.ofString());
 
 
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Bridge.class.getResource("bridge.fxml"));
-            try {
-                Parent root = loader.load();
-                stage.setScene(new Scene(root));
-
-                stage.show();
-
-            } catch (IOException e){
-                System.err.println(" I am broken");
-            }
-            return true;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        if(!response.body().contains("BLah")){
+            throw new IOException("failed to connect to server");
         }
+        request(null, role);
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Bridge.class.getResource("bridge.fxml"));
+
+        Parent root = loader.load();
+        stage.setScene(new Scene(root));
+        stage.show();
+
+
+
     }
 
 
 
 
     /**
-     * prompt generation logic.
-     * @param role the player's role, or VOTING if the player needs to vote
+     * prompt generation logic. this logic includes the necessary syntax TODO
+     * @param actionType either roleAction or voting
      * @param options all valid options
      * @return the prompt
      */
-    public String generatePrompt(String role, ArrayList<Integer> options){
-        return null;
+    public static String generatePrompt(String actionType, ArrayList<String> options){
+        return "";
     }
 
     /**
@@ -133,36 +139,42 @@ public class Bridge extends Application {
      * generates a pre-written prompt containing the passed in options and sends it to the player.
      * to be used for both roleActions AND voting.
      * this method should call the other ones.
-     * @param options the options to be included in the prompt
+     * @param options the options to be included in the prompt. if null, ignore the return
      * @param actionType the type of action the request was made for
      * @return the selection made by the player
+     * @throws IOException checked exceptions
+     * @throws InterruptedException checked exceptions
      */
-    public int request(ArrayList<Integer> options, String actionType){
-        return 0;
+    public static String request(ArrayList<String> options,
+                                 String actionType) throws InterruptedException, IOException{
+        String prompt = generatePrompt(actionType, options);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url+prompt))
+                .setHeader("Authorization", "Basic " + encoding).build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        log(response.body());
+        if (options == null) {
+            return null;
+        }
+        return parseResponse(response.body(), options);
     }
 
     /**
      * logs the responses of the AI. can also be used to log the prompts.
-     * @param response the response from the AI.
+     * @param in the input.
      */
-    public void logResponse(String response){
-        log.append(response);
-        log.append("\n");
+    public static void log(String in){
+        LOG.append(in);
+        LOG.append("\n");
     }
-    public String getLog(){
-        return log.toString();
-    }
-
-    public String getResponse() {
-        return response;
+    public static String getLog(){
+        return LOG.toString();
     }
 
-    public void setResponse(String response) {
-        this.response = response;
-    }
+
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("boot.fxml"));
         try {

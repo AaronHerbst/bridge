@@ -15,6 +15,10 @@ import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * has a single method
  */
@@ -24,14 +28,24 @@ public class BootController {
     @FXML
     private TextField pass;
     @FXML
-    private TextField URL;
+    private TextField url;
+    @FXML
+    private TextField role;
 
+
+    /**
+     * calls the corresponding method in the bridge class
+     * @param e gets the stage
+     */
     @FXML
     public void boot(ActionEvent e){
-        if(!Bridge.boot(user.getText(), pass.getText(), URL.getText(),
-                (Stage) ((Button) e.getSource()).getScene().getWindow())){
+        try{
+            Bridge.boot(user.getText(), pass.getText(), url.getText(),
+                    (Stage) ((Button) e.getSource()).getScene().getWindow(), role.getText());
+        } catch (NoSuchAlgorithmException | KeyManagementException |
+                 InterruptedException | IOException t){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("something went wrong");
+            alert.setContentText(t.getMessage());
             alert.show();
         }
 
