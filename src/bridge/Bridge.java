@@ -20,10 +20,10 @@ import java.net.http.HttpResponse;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Time;
+
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Timer;
+
 
 /**
  * the bridge between the AI player, and human moderator and the game itself.
@@ -151,16 +151,24 @@ public class Bridge extends Application {
                                  String actionType) throws InterruptedException, IOException{
         String prompt = generatePrompt(actionType, options);
         log(prompt);
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url+prompt))
-                .setHeader("Authorization", "Basic " + encoding).build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        String savedResponse = response.body();
-        log(savedResponse);
-        if (options == null) {
-            return null;
+        for (int i = 0; i < 3; i++) {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url+prompt))
+                    .setHeader("Authorization", "Basic " + encoding).build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String savedResponse = response.body();
+            if (options == null) {
+                return null;
+            }
+            String out = parseResponse(savedResponse, options);
+            if (out != null){
+                log(savedResponse);
+                return out;
+            }
         }
-        return parseResponse(savedResponse, options);
+
+
+        return null;
     }
 
     /**

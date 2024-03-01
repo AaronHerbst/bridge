@@ -32,12 +32,21 @@ public class Controller {
     private void request(){
         Scanner s = new Scanner(options.getText());
         ArrayList<String> in = new ArrayList<>();
+
         while (s.hasNext()){
             in.add(s.next());
         }
         try {
-            Alert a = new Alert(Alert.AlertType.INFORMATION);
-            a.setContentText(Bridge.request(in, act.getText()));
+            String info = Bridge.request(in, act.getText());
+            Alert a;
+            if (info == null){
+                a = new Alert(Alert.AlertType.ERROR);
+                a.setContentText("model gave an invalid response");
+            } else {
+                a = new Alert(Alert.AlertType.INFORMATION);
+                a.setContentText(info);
+            }
+
             a.show();
         } catch (IOException | InterruptedException t){
             Alert a = new Alert(Alert.AlertType.ERROR);
@@ -49,6 +58,7 @@ public class Controller {
     @FXML
     private void logChat(){
         Bridge.log(chat.getText());
+        chat.clear();
     }
     @FXML
     private void getLog(){
