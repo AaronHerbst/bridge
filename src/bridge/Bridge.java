@@ -81,7 +81,7 @@ public class Bridge extends Application {
         if(!response.body().contains("Blah")){
             throw new IOException("failed to connect to server \n"+response.body());
         }
-        request(null, role);
+        log(generatePrompt(null, null));
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Bridge.class.getResource("bridge.fxml"));
@@ -102,9 +102,163 @@ public class Bridge extends Application {
      * @param actionType either roleAction or voting
      * @param options all valid options
      * @return the prompt
+     * @throws UnsupportedOperationException when the role given to
+     * the boot method is unsupported.
      */
     public static String generatePrompt(String actionType, ArrayList<String> options){
-        return "";
+        if (options==null||actionType==null){
+            // initializer prompt
+            if (role.equalsIgnoreCase("lookout")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("Investigator")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("Sheriff")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("spy")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("jailor")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("vampire hunter")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("veteran")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("vigilante")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("bodyguard")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("doctor")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("escort")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("mayor")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("medium")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("transporter")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("Retributionist")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("disguiser")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("forger")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("framer")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("Hypnotist")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("janitor")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("ambusher")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("godfather")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("mafioso")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("blackmailer")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("Consigliere")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("consort")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("amnesiac")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("survivor")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("vampire")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("Executioner")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("jester")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("witch")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("arsonist")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("serial killer")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("werewolf")) {
+                return "placeholder text";
+            } else {
+                throw new UnsupportedOperationException("role is not supported");
+            }
+        } else if(actionType.equalsIgnoreCase("voting")){
+            return "placeholder text";
+        } else{
+            if (role.equalsIgnoreCase("lookout")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("Investigator")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("Sheriff")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("spy")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("jailor")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("vampire hunter")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("veteran")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("vigilante")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("bodyguard")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("doctor")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("escort")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("mayor")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("medium")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("transporter")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("Retributionist")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("disguiser")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("forger")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("framer")){
+                return "placeholder text";
+            } else if(role.equalsIgnoreCase("Hypnotist")){
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("janitor")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("ambusher")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("godfather")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("mafioso")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("blackmailer")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("Consigliere")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("consort")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("amnesiac")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("survivor")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("vampire")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("Executioner")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("jester")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("witch")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("arsonist")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("serial killer")) {
+                return "placeholder text";
+            } else if (role.equalsIgnoreCase("werewolf")) {
+                return "placeholder text";
+            } else {
+                throw new UnsupportedOperationException("role is not supported");
+            }
+        }
+
     }
 
     /**
@@ -153,9 +307,11 @@ public class Bridge extends Application {
         log(prompt);
         for (int i = 0; i < 3; i++) {
             HttpRequest request = HttpRequest.newBuilder()
+                    //there should be a getLog() call here
                     .uri(URI.create(url+prompt))
                     .setHeader("Authorization", "Basic " + encoding).build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request,
+                    HttpResponse.BodyHandlers.ofString());
             String savedResponse = response.body();
             if (options == null) {
                 return null;
