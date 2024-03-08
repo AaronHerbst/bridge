@@ -98,7 +98,7 @@ public class Bridge extends Application {
 
 
     /**
-     * prompt generation logic. this logic includes the necessary syntax TODO
+     * prompt generation logic. TODO
      * @param actionType either roleAction or voting
      * @param options all valid options
      * @return the prompt
