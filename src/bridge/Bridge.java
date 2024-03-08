@@ -307,7 +307,7 @@ public class Bridge extends Application {
         log(prompt);
         for (int i = 0; i < 3; i++) {
             HttpRequest request = HttpRequest.newBuilder()
-                    //there should be a getLog() call here
+                    //there should be a getLog() call here, along with necessary syntax
                     .uri(URI.create(url+prompt))
                     .setHeader("Authorization", "Basic " + encoding).build();
             HttpResponse<String> response = client.send(request,
